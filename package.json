@@ -7,15 +7,13 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node server/server.js"
   },
   "dependencies": {
-<<<<<<< HEAD
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "mongoose": "^8.19.3",
-=======
->>>>>>> 94aa22234555d93fb52fdb5cf0da388cc203cc7d
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "sweetalert2": "^11.26.3"
