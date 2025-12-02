@@ -2,13 +2,23 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import productoRoutes from './routes/Producto.route.js';
+import usuarioRoutes from './routes/Usuario.route.js';
+import authRoutes from './routes/Auth.route.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { mkdirSync, readFileSync } from 'fs';
 import swaggerUi from 'swagger-ui-express';
 
+// Configuración
+const config = {
+  PORT: 5000,
+  MONGODB_URI: 'mongodb://localhost:27017/api4',
+  JWT_SECRET: 'tu_clave_secreta_muy_segura_aqui',
+  JWT_EXPIRES_IN: '24h'
+};
+
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = config.PORT;
 
 // Middleware
 app.use(cors());
@@ -33,7 +43,7 @@ try {
 
 // Conexión a MongoDB
 console.log('🚀 Iniciando conexión a MongoDB...');
-mongoose.connect('mongodb://localhost:27017/api4', {
+mongoose.connect(config.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
@@ -42,6 +52,13 @@ mongoose.connect('mongodb://localhost:27017/api4', {
 
 // Rutas
 app.use('/api/productos', productoRoutes);
+app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/auth', authRoutes);
+
+// Ruta de prueba
+app.get('/api', (req, res) => {
+  res.json({ message: 'Bienvenido a la API' });
+});
 
 // Iniciar el servidor
 app.listen(PORT, () => {
@@ -54,6 +71,7 @@ app.listen(PORT, () => {
   console.log(`   - POST    http://localhost:${PORT}/api/productos`);
   console.log(`   - PUT     http://localhost:${PORT}/api/productos/:id`);
   console.log(`   - DELETE  http://localhost:${PORT}/api/productos/:id`);
-  console.log('\n🔧 Para detener el servidor, presiona: Ctrl + C');
+  console.log('\n� Para detener el servidor, presiona: Ctrl + C');
   console.log('\n✅ Listo para recibir peticiones...\n');
 });
+export { config };
