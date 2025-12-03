@@ -18,7 +18,10 @@
     "astro": "^5.15.4",
     "bcryptjs": "^3.0.3",
     "bootstrap": "^5.3.8",
+<<<<<<< HEAD
     "bootstrap-icons": "^1.13.1",
+=======
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",

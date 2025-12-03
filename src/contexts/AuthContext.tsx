@@ -110,9 +110,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         body: JSON.stringify({ 
           nombre: name, 
           email, 
+<<<<<<< HEAD
           password,
           rol: 'administrador' // Asignar rol de administrador por defecto
         })
+=======
+          password 
+        }),
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
       });
 
       const data: AuthResponse = await response.json();

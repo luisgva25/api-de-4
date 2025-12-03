@@ -22,9 +22,14 @@ const usuarioSchema = new mongoose.Schema({
   },
   rol: {
     type: String,
+<<<<<<< HEAD
     enum: ['administrador', 'gerente', 'empleado'],
     default: 'empleado',
     required: true
+=======
+    enum: ['usuario', 'admin']
+    // Sin valor por defecto, será undefined si no se especifica
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
   },
   fechaRegistro: {
     type: Date,
@@ -34,6 +39,7 @@ const usuarioSchema = new mongoose.Schema({
 
 // Hash de la contraseña antes de guardar
 usuarioSchema.pre('save', async function(next) {
+<<<<<<< HEAD
   // Solo proceder si la contraseña fue modificada
   if (!this.isModified('password')) return next();
   
@@ -50,6 +56,11 @@ usuarioSchema.pre('save', async function(next) {
     }
     
     // Generar hash de la contraseña
+=======
+  if (!this.isModified('password')) return next();
+  
+  try {
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
     next();

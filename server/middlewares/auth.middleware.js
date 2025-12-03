@@ -27,6 +27,7 @@ export const verificarToken = async (req, res, next) => {
         message: 'Usuario no encontrado'
       });
     }
+<<<<<<< HEAD
     
     // Asegurarse de que el usuario tenga un rol
     if (!usuario.rol) {
@@ -34,6 +35,8 @@ export const verificarToken = async (req, res, next) => {
       usuario.rol = 'empleado';
       await usuario.save();
     }
+=======
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
 
     // Agregar el usuario al objeto de solicitud
     req.usuario = usuario;
@@ -62,6 +65,7 @@ export const verificarToken = async (req, res, next) => {
   }
 };
 
+<<<<<<< HEAD
 // Middleware para verificar si el usuario es administrador o gerente
 export const esAdminOGerente = (req, res, next) => {
   if (req.usuario.rol !== 'administrador' && req.usuario.rol !== 'gerente') {
@@ -76,6 +80,11 @@ export const esAdminOGerente = (req, res, next) => {
 // Middleware para verificar si el usuario es administrador
 export const esAdmin = (req, res, next) => {
   if (req.usuario.rol !== 'administrador') {
+=======
+// Middleware para verificar si el usuario es administrador
+export const esAdmin = (req, res, next) => {
+  if (req.usuario.rol !== 'admin') {
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
     return res.status(403).json({
       status: 'error',
       message: 'Acceso denegado. Se requieren privilegios de administrador.'
@@ -84,6 +93,7 @@ export const esAdmin = (req, res, next) => {
   next();
 };
 
+<<<<<<< HEAD
 // Middleware para verificar si el usuario es gerente
 export const esGerente = (req, res, next) => {
   if (req.usuario.rol !== 'gerente') {
@@ -109,6 +119,11 @@ export const esEmpleado = (req, res, next) => {
 // Middleware para verificar si el usuario es el propietario del recurso o admin
 export const esPropietarioOAdmin = (req, res, next) => {
   if (req.usuario.rol !== 'administrador' && req.usuario.id !== req.params.id) {
+=======
+// Middleware para verificar si el usuario es el propietario del recurso o admin
+export const esPropietarioOAdmin = (req, res, next) => {
+  if (req.usuario.rol !== 'admin' && req.usuario.id !== req.params.id) {
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
     return res.status(403).json({
       status: 'error',
       message: 'No tienes permiso para realizar esta acción.'

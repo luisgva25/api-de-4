@@ -1,6 +1,9 @@
 import express from 'express';
 import productoController from '../controllers/Producto.controller.js';
+<<<<<<< HEAD
 import { verificarToken, esAdminOGerente } from '../middlewares/auth.middleware.js';
+=======
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -35,6 +38,7 @@ const fileFilter = (_req, file, cb) => {
 
 const upload = multer({ storage, fileFilter, limits: { fileSize: 5 * 1024 * 1024 } });
 
+<<<<<<< HEAD
 // Rutas protegidas que requieren autenticación
 router.use(verificarToken);
 
@@ -46,5 +50,12 @@ router.get('/:id', productoController.productoPorID);
 router.post('/', esAdminOGerente, upload.single('imagen'), productoController.producto);
 router.put('/:id', esAdminOGerente, upload.single('imagen'), productoController.actualizarProducto);
 router.delete('/:id', esAdminOGerente, productoController.eliminarProducto);
+=======
+router.post('/', upload.single('imagen'), productoController.producto);
+router.get('/', productoController.obtenerTodosLosProductos);
+router.get('/:id', productoController.productoPorID);
+router.put('/:id', upload.single('imagen'), productoController.actualizarProducto);
+router.delete('/:id', productoController.eliminarProducto);
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
 
 export default router;

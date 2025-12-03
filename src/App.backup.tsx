@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
+<<<<<<< HEAD
 import { useNavigate } from 'react-router-dom';
+=======
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
 import {
   Container,
   Row,
@@ -9,6 +12,10 @@ import {
   ListGroup,
   Spinner,
   Badge,
+<<<<<<< HEAD
+=======
+  Card,
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
   Form,
   Modal
 } from 'react-bootstrap';
@@ -60,6 +67,7 @@ function App() {
     }
   }, []);
 
+<<<<<<< HEAD
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
@@ -99,6 +107,17 @@ function App() {
         throw new Error(errorData.message || 'Error al cargar productos');
       }
       
+=======
+  // Cargar productos al iniciar
+  useEffect(() => {
+    fetchProductos();
+  }, []);
+
+  const fetchProductos = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/api/productos`);
+      if (!response.ok) throw new Error('Error al cargar productos');
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
       const result = await response.json();
       // El servidor devuelve { status, message, data, total }
       const data = Array.isArray(result) ? result : (result?.data ?? []);
@@ -363,6 +382,7 @@ function App() {
       bodyForm.append('precioProducto', String(formData.precioProducto ?? ''));
       if (imageFile) bodyForm.append('imagen', imageFile);
 
+<<<<<<< HEAD
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('No hay token de autenticación');
@@ -373,6 +393,10 @@ function App() {
         headers: {
           'Authorization': `Bearer ${token}`
         },
+=======
+      const response = await fetch(url, {
+        method,
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
         body: bodyForm,
       });
 
@@ -439,6 +463,7 @@ function App() {
 
     if (result.isConfirmed) {
       try {
+<<<<<<< HEAD
         const token = localStorage.getItem('token');
         if (!token) {
           throw new Error('No hay token de autenticación');
@@ -460,6 +485,13 @@ function App() {
           }
           throw new Error('Error al eliminar el producto');
         }
+=======
+        const response = await fetch(`${API_BASE}/api/productos/${id}`, {
+          method: 'DELETE',
+        });
+
+        if (!response.ok) throw new Error('Error al eliminar el producto');
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
 
         fetchProductos();
 

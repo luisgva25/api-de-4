@@ -163,6 +163,7 @@ const actualizarProducto = async (req, res) => {
 
 const obtenerTodosLosProductos = async (req, res) => {
     try {
+<<<<<<< HEAD
         let query = {};
         let sort = {};
         
@@ -180,6 +181,14 @@ const obtenerTodosLosProductos = async (req, res) => {
             total: productos.length,
             // Incluir el rol del usuario en la respuesta para depuración
             userRole: req.usuario.rol
+=======
+        const productos = await Producto.find();
+        return res.status(200).json({
+            status: "success",
+            message: "Productos obtenidos con exito",
+            data: productos,
+            total: productos.length
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
         })
     } catch (error) {
         console.log("ERROR al obtener productos: ", error);

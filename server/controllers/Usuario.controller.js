@@ -15,22 +15,41 @@ export const registrarUsuario = async (req, res) => {
       });
     }
 
+<<<<<<< HEAD
     // Crear nuevo usuario con rol 'empleado' por defecto
     const nuevoUsuario = new Usuario({
       nombre,
       email,
       password,
       rol: 'empleado' // Asignar rol 'empleado' por defecto
+=======
+    // Crear nuevo usuario sin especificar el rol
+    // No incluimos el campo 'rol' para que no se establezca ningún valor por defecto
+    const nuevoUsuario = new Usuario({
+      nombre,
+      email,
+      password
+      // No incluimos el campo 'rol' para que quede completamente indefinido
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
     });
 
     // Guardar usuario en la base de datos
     const usuarioGuardado = await nuevoUsuario.save();
 
+<<<<<<< HEAD
     // Crear token JWT con el rol del usuario
     const payload = { 
       id: usuarioGuardado._id,
       rol: usuarioGuardado.rol || 'empleado' // Asegurar que siempre haya un rol
     };
+=======
+    // Crear token JWT sin incluir el rol si es undefined
+    const payload = { id: usuarioGuardado._id };
+    // Solo incluir el rol si existe y no es undefined
+    if (usuarioGuardado.rol !== undefined) {
+      payload.rol = usuarioGuardado.rol;
+    }
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
     
     const token = jwt.sign(
       payload,
@@ -174,6 +193,7 @@ export const eliminarUsuario = async (req, res) => {
     });
   }
 };
+<<<<<<< HEAD
 
 // Actualizar el rol de un usuario (solo para administradores)
 export const actualizarRolUsuario = async (req, res) => {
@@ -226,3 +246,5 @@ export const actualizarRolUsuario = async (req, res) => {
     });
   }
 };
+=======
+>>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
