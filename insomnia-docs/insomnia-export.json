@@ -1,0 +1,63 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-11-19T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:2025.6.0",
+  "resources": [
+    {
+      "_id": "wrk_pene_main",
+      "created": 0,
+      "modified": 0,
+      "type": "workspace",
+      "name": "pene-main API",
+      "description": "Workspace para la API de pene-main",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_pene_main",
+      "parentId": "wrk_pene_main",
+      "type": "environment",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "auth_token": ""
+      }
+    },
+    {
+      "_id": "req_get_users",
+      "parentId": "wrk_pene_main",
+      "type": "request",
+      "name": "GET /users",
+      "method": "GET",
+      "url": "{{ base_url }}/users",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {}
+    },
+    {
+      "_id": "req_post_user",
+      "parentId": "wrk_pene_main",
+      "type": "request",
+      "name": "POST /users",
+      "method": "POST",
+      "url": "{{ base_url }}/users",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Juan\",\n  \"email\": \"juan@example.com\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ auth_token }}"
+        }
+      ],
+      "authentication": {}
+    }
+  ]
+}
