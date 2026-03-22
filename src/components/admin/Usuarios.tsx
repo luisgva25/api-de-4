@@ -167,10 +167,10 @@ const Usuarios = () => {
               <td>{usuario.email}</td>
               <td>
                 <span className={`badge ${
-                  usuario.rol === 'admin' ? 'bg-danger' : 
+                  usuario.rol === 'administrador' ? 'bg-danger' : 
                   usuario.rol === 'gerente' ? 'bg-warning text-dark' : 'bg-secondary'
                 }`}>
-                  {usuario.rol === 'admin' ? 'Administrador' : 
+                  {usuario.rol === 'administrador' ? 'Administrador' : 
                    usuario.rol === 'gerente' ? 'Gerente' : 'Usuario'}
                 </span>
               </td>
@@ -240,7 +240,7 @@ const Usuarios = () => {
               >
                 <option value="usuario">Usuario</option>
                 <option value="gerente">Gerente</option>
-                <option value="admin">Administrador</option>
+                <option value="administrador">Administrador</option>
               </Form.Select>
             </Form.Group>
 

@@ -1,8 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-<<<<<<< HEAD
-import { useNavigate } from 'react-router-dom';
-=======
->>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Container,
   Row,
@@ -12,10 +9,6 @@ import {
   ListGroup,
   Spinner,
   Badge,
-<<<<<<< HEAD
-=======
-  Card,
->>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
   Form,
   Modal
 } from 'react-bootstrap';
@@ -23,6 +16,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2';
 import { FaPlus, FaTrash, FaEdit, FaBars, FaSignOutAlt } from 'react-icons/fa';
 import { useAuth } from './contexts/AuthContext';
+import AdminUsers from './pages/AdminUsers';
 
 const API_BASE = 'http://localhost:5000';
 
@@ -40,8 +34,10 @@ interface Producto {
 }
 
 function App() {
-  const { logout } = useAuth();
-  
+  const { logout, user } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     logout();
     window.location.href = '/login';
@@ -67,9 +63,7 @@ function App() {
     }
   }, []);
 
-<<<<<<< HEAD
-  const { user, isAuthenticated } = useAuth();
-  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   // Cargar productos al iniciar solo si está autenticado
   useEffect(() => {
@@ -95,7 +89,7 @@ function App() {
           'Content-Type': 'application/json'
         }
       });
-      
+
       if (!response.ok) {
         if (response.status === 401) {
           // Token inválido o expirado
@@ -106,18 +100,7 @@ function App() {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || 'Error al cargar productos');
       }
-      
-=======
-  // Cargar productos al iniciar
-  useEffect(() => {
-    fetchProductos();
-  }, []);
 
-  const fetchProductos = async () => {
-    try {
-      const response = await fetch(`${API_BASE}/api/productos`);
-      if (!response.ok) throw new Error('Error al cargar productos');
->>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
       const result = await response.json();
       // El servidor devuelve { status, message, data, total }
       const data = Array.isArray(result) ? result : (result?.data ?? []);
@@ -296,38 +279,6 @@ function App() {
     }
   }
 
-  const handleEditProduct = (producto: Producto) => {
-    setEditingProduct(producto);
-    handleAddProduct(producto);
-  };
-
-  const handleDeleteProduct = async (id: string) => {
-    try {
-      const result = await Swal.fire({
-        title: '¿Estás seguro?',
-        text: 'No podrás revertir esta acción',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar'
-      });
-
-      if (result.isConfirmed) {
-        const response = await fetch(`${API_BASE}/api/productos/${id}`, {
-          method: 'DELETE'
-        });
-
-        if (!response.ok) throw new Error('Error al eliminar el producto');
-
-        Swal.fire('¡Eliminado!', 'El producto ha sido eliminado.', 'success');
-        fetchProductos();
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      Swal.fire('Error', 'No se pudo eliminar el producto', 'error');
-    }
-  };
-
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-MX');
   };
@@ -346,8 +297,12 @@ function App() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     if (file) {
-      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg') {
-        Swal.fire('Archivo inválido', 'Solo se permiten imágenes JPG', 'warning');
+      if (
+        file.type !== 'image/jpeg' &&
+        file.type !== 'image/jpg' &&
+        file.type !== 'image/png'
+      ) {
+        Swal.fire('Archivo inválido', 'Solo se permiten imágenes JPG o PNG', 'warning');
         setImageFile(null);
         setImagePreview('');
         return;
@@ -371,18 +326,50 @@ function App() {
 
       const method = editingProduct ? 'PUT' : 'POST';
 
+      // Validaciones de campos obligatorios y tipos
+      const nombre = (formData.nombre || '').trim();
+      const descripcion = (formData.descripcion || '').trim();
+      const fechaCompra = formData.fechaCompra || '';
+      const fechaCaducidad = formData.fechaCaducidad || '';
+      const precio = formData.precio;
+      const precioProducto = formData.precioProducto;
+      const stock = formData.stock;
+
+      if (!nombre || !descripcion || !fechaCompra || !fechaCaducidad || precio == null || precioProducto == null || stock == null) {
+        Swal.fire('Campos requeridos', 'Todos los campos son obligatorios', 'warning');
+        setLoading(false);
+        return;
+      }
+
+      if (descripcion.length > 200) {
+        Swal.fire('Descripción demasiado larga', 'La descripción no puede superar los 200 caracteres', 'warning');
+        setLoading(false);
+        return;
+      }
+
+      if (Number.isNaN(Number(precio)) || Number.isNaN(Number(precioProducto))) {
+        Swal.fire('Valores inválidos', 'Precio de venta y precio de compra deben ser números válidos', 'warning');
+        setLoading(false);
+        return;
+      }
+
+      if (!Number.isInteger(Number(stock))) {
+        Swal.fire('Stock inválido', 'El stock debe ser un número entero', 'warning');
+        setLoading(false);
+        return;
+      }
+
       const bodyForm = new FormData();
-      bodyForm.append('nombre', formData.nombre || '');
-      bodyForm.append('precio', String(formData.precio ?? ''));
-      bodyForm.append('descripcion', formData.descripcion || '');
-      bodyForm.append('fechaCompra', formData.fechaCompra ? new Date(formData.fechaCompra).toISOString() : '');
-      bodyForm.append('fechaCaducidad', formData.fechaCaducidad ? new Date(formData.fechaCaducidad).toISOString() : '');
-      bodyForm.append('stock', String(formData.stock ?? ''));
-      bodyForm.append('proveedor', formData.proveedor || '');
-      bodyForm.append('precioProducto', String(formData.precioProducto ?? ''));
+      bodyForm.append('nombre', nombre);
+      bodyForm.append('precio', String(precio));
+      bodyForm.append('descripcion', descripcion);
+      bodyForm.append('fechaCompra', new Date(fechaCompra).toISOString());
+      bodyForm.append('fechaCaducidad', new Date(fechaCaducidad).toISOString());
+      bodyForm.append('stock', String(stock));
+      bodyForm.append('proveedor', (formData.proveedor || '').trim());
+      bodyForm.append('precioProducto', String(precioProducto));
       if (imageFile) bodyForm.append('imagen', imageFile);
 
-<<<<<<< HEAD
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('No hay token de autenticación');
@@ -393,10 +380,6 @@ function App() {
         headers: {
           'Authorization': `Bearer ${token}`
         },
-=======
-      const response = await fetch(url, {
-        method,
->>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
         body: bodyForm,
       });
 
@@ -405,7 +388,7 @@ function App() {
         try {
           const err = await response.json();
           if (err?.message) msg = err.message;
-        } catch {}
+        } catch { }
         throw new Error(msg);
       }
 
@@ -463,7 +446,6 @@ function App() {
 
     if (result.isConfirmed) {
       try {
-<<<<<<< HEAD
         const token = localStorage.getItem('token');
         if (!token) {
           throw new Error('No hay token de autenticación');
@@ -485,13 +467,6 @@ function App() {
           }
           throw new Error('Error al eliminar el producto');
         }
-=======
-        const response = await fetch(`${API_BASE}/api/productos/${id}`, {
-          method: 'DELETE',
-        });
-
-        if (!response.ok) throw new Error('Error al eliminar el producto');
->>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
 
         fetchProductos();
 
@@ -517,7 +492,7 @@ function App() {
           loop
           muted
           playsInline
-          src="/wall1.mp4"
+          src="/wall.mp4"
           onError={(e) => console.error('Error al cargar el video:', e)}
         >
           Tu navegador no soporta la reproducción de video.
@@ -566,37 +541,70 @@ function App() {
       {/* Contenido principal */}
       <div className="content-wrapper">
         <header className="main-header">
-          <div className="d-flex align-items-center">
-            <Button
-              variant="outline-light"
-              className="me-3 d-md-none"
-              onClick={() => setShowSidebar(true)}
-            >
-              <FaBars />
-            </Button>
-            <h1 className="mb-0 me-3">Gestión de Productos</h1>
-          </div>
-          <div className="d-flex align-items-center">
-            <Button
-              variant="outline-light"
-              className="me-3"
-              onClick={handleLogout}
-              title="Cerrar sesión"
-            >
-              <FaSignOutAlt className="me-1" />
-              <span className="d-none d-md-inline">Cerrar Sesión</span>
-            </Button>
-            <Button
-              variant="primary"
-              onClick={() => {
-                setEditingProduct(null);
-                setFormData({});
-                setShowModal(true);
-              }}
-            >
-              <FaPlus className="me-2" />
-              Agregar Producto
-            </Button>
+          <div className="d-flex align-items-center justify-content-between w-100">
+            <div className="d-flex align-items-center">
+              <Button
+                variant="outline-light"
+                className="me-3 d-md-none"
+                onClick={() => setShowSidebar(true)}
+              >
+                <FaBars />
+              </Button>
+              <h1 className="mb-0 me-3">Gestión de Productos</h1>
+            </div>
+
+            {user && (
+              <a
+                href="#"
+                className="welcome-pill welcome-text text-center mx-3 flex-grow-1"
+                onClick={(e) => e.preventDefault()}
+              >
+                {`Bienvenido ${
+                  user.rol === 'administrador'
+                    ? 'Administrador'
+                    : user.rol === 'gerente'
+                      ? 'Gerente'
+                      : 'Usuario'
+                } ${user.nombre}`}
+              </a>
+            )}
+
+            <div className="d-flex align-items-center">
+              <Button
+                variant="outline-light"
+                className="me-3 comic-button"
+                onClick={handleLogout}
+                title="Cerrar sesión"
+              >
+                <FaSignOutAlt className="me-1" />
+                <span className="d-none d-md-inline">Cerrar Sesión</span>
+              </Button>
+              {(user?.rol === 'gerente' || user?.rol === 'administrador') && (
+                <Button
+                  variant="primary"
+                  className="me-2 comic-button"
+                  onClick={() => {
+                    setEditingProduct(null);
+                    setFormData({});
+                    setShowModal(true);
+                  }}
+                >
+                  <FaPlus className="me-2" />
+                  Agregar Producto
+                </Button>
+              )}
+              {user?.rol === 'administrador' && (
+                <Button
+                  variant="outline-light"
+                  className="comic-button"
+                  onClick={() => {
+                    navigate('/admin/usuarios');
+                  }}
+                >
+                  Administrar usuarios
+                </Button>
+              )}
+            </div>
           </div>
         </header>
 
@@ -621,23 +629,25 @@ function App() {
                     <div className="card-body">
                       <div className="d-flex justify-content-between align-items-start mb-3">
                         <h5 className="mb-0">{producto.nombre}</h5>
-                        <div>
-                          <Button
-                            variant="outline-primary"
-                            size="sm"
-                            className="me-1"
-                            onClick={() => handleEdit(producto)}
-                          >
-                            <FaEdit />
-                          </Button>
-                          <Button
-                            variant="outline-danger"
-                            size="sm"
-                            onClick={() => handleDelete(producto._id)}
-                          >
-                            <FaTrash />
-                          </Button>
-                        </div>
+                        {(user?.rol === 'gerente' || user?.rol === 'administrador') && (
+                          <div>
+                            <Button
+                              variant="outline-primary"
+                              size="sm"
+                              className="me-1"
+                              onClick={() => handleEdit(producto)}
+                            >
+                              <FaEdit />
+                            </Button>
+                            <Button
+                              variant="outline-danger"
+                              size="sm"
+                              onClick={() => handleDelete(producto._id)}
+                            >
+                              <FaTrash />
+                            </Button>
+                          </div>
+                        )}
                       </div>
                       <h6 className="mb-2 text-muted">
                         Proveedor: {producto.proveedor}
@@ -685,6 +695,11 @@ function App() {
           )}
         </Container>
       </div>
+
+      {/* Panel flotante de administración de usuarios cuando la ruta es /admin/usuarios */}
+      {user?.rol === 'administrador' && location.pathname === '/admin/usuarios' && (
+        <AdminUsers />
+      )}
 
       {/* Modal para agregar/editar producto */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
@@ -739,7 +754,7 @@ function App() {
               <Form.Label>Imagen (JPG)</Form.Label>
               <Form.Control
                 type="file"
-                accept="image/jpeg,image/jpg"
+                accept="image/jpeg,image/jpg,image/png"
                 onChange={handleFileChange}
               />
               <Form.Text className="text-muted">Solo archivos .jpg o .jpeg (máx. 5MB)</Form.Text>

@@ -33,21 +33,12 @@ export const login = async (req, res) => {
       });
     }
 
-<<<<<<< HEAD
     // Crear token JWT con el rol del usuario
-    // Si el usuario no tiene rol, se asigna 'empleado' por defecto
+    // Si el usuario no tiene rol, se asigna 'usuario' por defecto
     const payload = { 
       id: usuario._id,
-      rol: usuario.rol || 'empleado' // Asegurar que siempre haya un rol
+      rol: usuario.rol || 'usuario' // Asegurar que siempre haya un rol
     };
-=======
-    // Crear token JWT sin incluir el rol si es undefined
-    const payload = { id: usuario._id };
-    // Solo incluir el rol si existe y no es undefined
-    if (usuario.rol !== undefined) {
-      payload.rol = usuario.rol;
-    }
->>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
     
     const token = jwt.sign(
       payload,

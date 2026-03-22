@@ -18,16 +18,14 @@
     "astro": "^5.15.4",
     "bcryptjs": "^3.0.3",
     "bootstrap": "^5.3.8",
-<<<<<<< HEAD
     "bootstrap-icons": "^1.13.1",
-=======
->>>>>>> f347c7b7250b0da4ff34669d167596663f4205f0
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.19.3",
     "multer": "^2.0.2",
+    "nodemon": "^3.1.11",
     "react": "^19.1.1",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.1",

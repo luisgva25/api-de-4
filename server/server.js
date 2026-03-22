@@ -14,7 +14,7 @@ const config = {
   PORT: 5000,
   MONGODB_URI: 'mongodb://localhost:27017/api4',
   JWT_SECRET: 'tu_clave_secreta_muy_segura_aqui',
-  JWT_EXPIRES_IN: '24h'
+  JWT_EXPIRES_IN: '1h'
 };
 
 const app = express();
